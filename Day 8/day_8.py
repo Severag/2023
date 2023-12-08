@@ -1,4 +1,4 @@
-import re, math
+import re
 import numpy as np
 
 def check(myanswer, answer):
@@ -74,10 +74,7 @@ def solve_part2(data):
         if all_Zs:  # all Z-enders right now
             return idx 
         elif False not in freqs:  # we know enough to predict when it'll happen
-            lcm = 1  # least common multiple
-            for val in freqs:
-                lcm = math.lcm(lcm, val)
-            return lcm
+            return np.lcm.reduce(freqs, dtype=np.longlong)  # least common multiple
 
 
 
