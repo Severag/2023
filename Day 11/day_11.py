@@ -17,14 +17,14 @@ def read_file(filename):
     with open( filename, 'r') as f:
         star_map = np.array([parse(line.strip()) for line in f], dtype=np.longlong)
     
-    total = len(star_map)
-    r_mask = np.where(np.sum(star_map, axis=1) == total)
+    total = len(star_map)  # find rows where there aren't stars to lower the sum
+    r_mask = np.where(np.sum(star_map, axis=1) == total)  
     
-    total = len(star_map[0])
+    total = len(star_map[0])  # find columns where there aren't stars 
     c_mask = np.where(np.sum(star_map, axis=0) == total)
     
-    star_map[r_mask] = -1
-    star_map[:, c_mask] = -1
+    star_map[r_mask] = -1  # set the value of rows without stars to -1. their 
+    star_map[:, c_mask] = -1  # actual distances with expansion will be added later
     
     stars = list(zip(*np.where(star_map == 0)))  # record where the stars are
     star_map[star_map == 0] = 1  # stars are regular space, without expansion
