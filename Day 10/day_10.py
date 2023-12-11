@@ -135,29 +135,6 @@ translator = {'|':np.array([[-1, 0],[ 1, 0]]),
               '.':np.array([]),
               'S':np.array([[-1, 0],[ 1, 0],[ 0,-1],[ 0, 1]])}
 
-# test_case = read_file('test_case.txt')
-# test_case2 = read_file('test_case2.txt')
-# test_case3 = read_file('test_case3.txt')
-# puzz_input = read_file('puzzle_input.txt')
-
-
-# test_soln3 = solve(test_case3)
-
-# test_soln = solve(test_case)
-# test_soln2 = solve(test_case2)
-# test_soln3 = solve(test_case3)
-# puzz_soln = solve(puzz_input)
-
-# print('Part 1'.center(50,'-'))
-# check( test_soln[0], 8)
-# print(puzz_soln[0])
-
-# print('\n\n' + 'Part 2'.center(50,'-'))
-# check( test_soln2[1], 10)
-# check( test_soln3[1], 8)
-# print(puzz_soln[0])  # not 7173
-
-
 puzzles = [['test_case.txt',    [8,        1]],
            ['test_case2.txt',   [None,    10]],
            ['test_case3.txt',   [None,     8]],
@@ -172,17 +149,3 @@ for filename, answers in puzzles:
         [check(res, ans) for res, ans in zip(results, answers) if ans is not None]
     else:
         print(f"\t{results}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
