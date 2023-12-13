@@ -43,7 +43,7 @@ def part1(state, combo):
         return 0  # left some broken springs on the table or ran out of report too early
     
     L = lengths[0]
-    # look ahead for some combination of # or ? that is <L> long and has either
+    # look ahead for some combination of # or ? that is <L> long and has 
     # a ., ?, or x after it. x being something I added to the end of each report
     regex = r'(?=([\#\?]{%d}[\.\?x]))' % (L,)
     
