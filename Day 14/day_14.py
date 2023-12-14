@@ -62,7 +62,8 @@ def find_load(board):
 
 def part2(data):
     # board as string: list of which cycles they appeared
-    prev_states = {str(data):[0]}
+    prev_states = {np.array2string(data, 500, threshold=10000):[0]}
+    # 500 keeps each row on 1 line, threshold prevents replacing rows with '...'
     time = 1_000_000_000
     
     # for each cycle
@@ -74,7 +75,6 @@ def part2(data):
         
         # see if we can extrapolate out to the state at cycle = <time>
         key = np.array2string(data, 500, threshold=10000)
-        # 500 keeps each row on 1 line, threshold prevents replacing rows with '...'
         if key in prev_states:  # if we've been here before
             # check if we can repeat from here to exactly 1 billion    
             freq = idx - prev_states[key][-1]
