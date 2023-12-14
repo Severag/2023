@@ -14,7 +14,6 @@ def check(myanswer, answer):
 def read_file(filename):
     with open( filename, 'r') as f:
         data = np.array([np.array(list(line.strip())) for line in f])
-    
     return data
 
 
@@ -81,8 +80,9 @@ def part2(data):
             if (time - idx) % freq == 0:  
                 # then this will also be the state at 1 billion
                 return find_load(data)
-        # else:
-        prev_states[key] = prev_states.get(key, []) + [idx]
+            prev_states[key].append(idx)
+        else:
+            prev_states[key] = [idx]
 
 
 
