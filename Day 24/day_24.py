@@ -18,7 +18,7 @@ def read_file(filename):
     with open( filename, 'r') as f:
         data = [parser(line.split('@')) for line in f]
     
-    return np.array(data)
+    return np.array(data, dtype=np.longlong)
 
 
 
@@ -73,40 +73,42 @@ def get_time(x, p, v):
 
 
 def part2(data):
-    ps, vs = data[:, 0], data[:, 1]
+    # --0-- #
+    # switch to a hail #0-centric reference frame
+    new_ref = data - data[0]  
+    # hail #0 is now stationary at the origin
     
-    def error(new_line):
-        p_, v_ = new_line[:3], new_line[3:]
-        As = np.sum((vs - v_)**2, axis=1, keepdims=True)
-        Bs = np.sum(2 * (ps - p_) * (vs - v_), axis=1, keepdims=True)
-        Ts = -Bs / 2 / As
-        
-        return np.sum(np.abs(ps - p_ + (vs - v_) * Ts))
+    # --1-- #
+    # find plane containing the origin and hail #1's line
+    normal = np.cross(new_ref[1,0], new_ref[1,1])
+    normal = normal / np.sqrt(np.dot(normal, normal * 1.0))  # make it a unit vector
+    # if hail #1 is defined by p0 + v*t, then the above is a short form of
+    # cross(p0 - origin, p1 - p0) where p1 is p0 + v*1
+    # rock's trajectory has to be in this plane
     
-    def constraints(new_line):
-        p_, v_ = new_line[:3], new_line[3:]
-        As = np.sum((vs - v_)**2, axis=1, keepdims=True)
-        Bs = np.sum(2 * (ps - p_) * (vs - v_), axis=1, keepdims=True)
-        return np.min(-Bs / 2 / As)
+    # --2-- #
+    # find when & where hail #2 intersects this plane
+    p0, v = new_ref[2]
+    time2 = - np.dot(normal, p0) / np.dot(normal, v)
+    # at <time2>, (p0 + v*time2) * normal is 0, solve for time2
+    point2 = p0 + v * time2
     
-    cons = {'type': 'ineq',
-            'fun' : constraints}
-    from scipy.optimize import minimize
+    # --3-- #
+    # find when & where hail #3 intersects this plane
+    p0, v = new_ref[3]
+    time3 = - np.dot(normal, p0) / np.dot(normal, v)
+    # at <time3>, (p0 + v*time3) * normal is 0, solve for time3
+    point3 = p0 + v * time3
     
-    res_1 = minimize(error, [0,0,0,  2,2,2], constraints=cons)
+    # --4-- #
+    # get rock's line
+    v_rock = (point2 - point3) / (time2 - time3)
+    # distance traveled from hail #2 to hail #3, divived by the time it took
+    p_rock = point2 - time2 * v_rock
+    # point where rock hits hail #2 minus the distance it covered to get there
+    p_rock_true = p_rock + data[0, 0]  # convet back into stationary reference frame
     
-    return np.sum(np.round(res_1.x[:3]))
-
-
-
-def closest_approach(line1, line2):
-    p1,v1 = line1
-    p2,v2 = line2
-    
-    A = np.dot(v1 - v2, v1 - v2)
-    B = 2 * np.dot(p1 - p2, v1 - v2)
-    
-    return - B / 2 / A
+    return int(p_rock_true.round().sum())
 
 
 
